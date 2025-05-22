@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gaveta com Meias!</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: white;
+      text-align: center;
+    }
+
+    h2 {
+      color: #000000;
+      margin-top: 10px;
+    }
+
+    .drawer-container {
+      width: 100%;
+      height: 90vh;
+      background-color: #993300;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .drawer {
+      width: 60vw;
+      max-width: 600px;
+      height: 300px;
+      background-color: #3b1f0e;
+      border-radius: 8px;
+      position: absolute;
+      cursor: grab;
+      transition: box-shadow 0.2s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .drawer:active {
+      cursor: grabbing;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+    }
+
+    .socks-row {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: absolute;
+    }
+
+    .sock {
+      font-size: 2.5em;
+      user-select: none;
+    }
+
+    @media (max-width: 600px) {
+      .drawer {
+        width: 90vw;
+        height: 240px;
+      }
+
+      .sock {
+        font-size: 2em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Gaveta com Meias!</h2>
+
+  <div class="drawer-container">
+    <div class="drawer" id="drawer">
+      <div class="socks-row" id="socksRow">
+        <div class="sock">🧦</div>
+        <div class="sock">🧦</div>
+        <div class="sock">🧦</div>
+        <div class="sock">🧦</div>
+        <div class="sock">🧦</div>
+        <div class="sock">🧦</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const drawer = document.getElementById('drawer');
+    const socksRow = document.getElementById('socksRow');
+    const container = document.querySelector('.drawer-container');
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let startLeft = 0;
+    let startTop = 0;
+
+    function updateDrawerPosition(newLeft, newTop) {
+      const maxLeft = container.clientWidth - drawer.clientWidth;
+      const maxTop = container.clientHeight - drawer.clientHeight;
+
+      const clampedLeft = Math.min(Math.max(newLeft, 0), maxLeft);
+      const clampedTop = Math.min(Math.max(newTop, 0), maxTop);
+
+      drawer.style.left = `${clampedLeft}px`;
+      drawer.style.top = `${clampedTop}px`;
+
+      repositionSocks();
+    }
+
+    function repositionSocks() {
+      // Centraliza verticalmente as meias dentro da gaveta
+      const drawerHeight = drawer.clientHeight;
+      const socksHeight = socksRow.clientHeight;
+      socksRow.style.top = `${(drawerHeight - socksHeight) / 2}px`;
+    }
+
+    // Eventos de mouse
+    drawer.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      startLeft = drawer.offsetLeft;
+      startTop = drawer.offsetTop;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const offsetX = e.clientX - startX;
+      const offsetY = e.clientY - startY;
+      updateDrawerPosition(startLeft + offsetX, startTop + offsetY);
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    // Eventos de toque
+    drawer.addEventListener('touchstart', (e) => {
+      isDragging = true;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      startLeft = drawer.offsetLeft;
+      startTop = drawer.offsetTop;
+    });
+
+    document.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      const offsetX = e.touches[0].clientX - startX;
+      const offsetY = e.touches[0].clientY - startY;
+      updateDrawerPosition(startLeft + offsetX, startTop + offsetY);
+    });
+
+    document.addEventListener('touchend', () => {
+      isDragging = false;
+    });
+
+    // Centraliza a gaveta ao carregar
+    window.addEventListener('load', () => {
+      const centerLeft = (container.clientWidth - drawer.clientWidth) / 2;
+      const centerTop = (container.clientHeight - drawer.clientHeight) / 2;
+      updateDrawerPosition(centerLeft, centerTop);
+    });
+
+    // Reajusta meias e mantém a gaveta dentro da tela ao redimensionar
+    window.addEventListener('resize', () => {
+      const left = drawer.offsetLeft;
+      const top = drawer.offsetTop;
+      updateDrawerPosition(left, top);
+    });
+  </script>
+
+</body>
+</html>
+
+
+
+
+
