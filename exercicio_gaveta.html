@@ -115,13 +115,13 @@
     }
 
     function repositionSocks() {
-      // Centraliza verticalmente as meias dentro da gaveta
+      // centraliza verticalmente as meias dentro da gaveta
       const drawerHeight = drawer.clientHeight;
       const socksHeight = socksRow.clientHeight;
       socksRow.style.top = `${(drawerHeight - socksHeight) / 2}px`;
     }
 
-    // Eventos de mouse
+    // eventos de mouse
     drawer.addEventListener('mousedown', (e) => {
       isDragging = true;
       startX = e.clientX;
@@ -141,7 +141,7 @@
       isDragging = false;
     });
 
-    // Eventos de toque
+    // eventos de toque
     drawer.addEventListener('touchstart', (e) => {
       isDragging = true;
       startX = e.touches[0].clientX;
@@ -161,14 +161,14 @@
       isDragging = false;
     });
 
-    // Centraliza a gaveta ao carregar
+    // centraliza a gaveta ao carregar
     window.addEventListener('load', () => {
       const centerLeft = (container.clientWidth - drawer.clientWidth) / 2;
       const centerTop = (container.clientHeight - drawer.clientHeight) / 2;
       updateDrawerPosition(centerLeft, centerTop);
     });
 
-    // Reajusta meias e mantém a gaveta dentro da tela ao redimensionar
+    // reajusta meias e mantém a gaveta dentro da tela ao redimensionar
     window.addEventListener('resize', () => {
       const left = drawer.offsetLeft;
       const top = drawer.offsetTop;
